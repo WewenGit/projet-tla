@@ -1,0 +1,89 @@
+*0 Je me baladais dans la foret et puis j'ai trouvé un coffre.
+//1 Je décide de l'ouvrir
+//5 Ne surtout pas l'ouvrir
+
+$5 fin
+
+*0 Vous êtes un artiste. Rêveur, peu sociable, peu sportif... Vous passez vos journées chez vous à réaliser vos idées qui viennent comme un flux incessant.
+Vous êtes soudainement frappé par une idée floue, si floue qu'il vous devient impossible de visualiser vos autres idées. Cette idée frustrante mais intriguante
+vous paralyse dans votre travail. Vous voulez impérativement retrouver vos capacités, il faudra donc réussir à visualiser cette idée. Est-ce la première fois que vous vous
+retrouvez dans cette situation ? Vous ne savez plus vraiment et cela vous importe peu car vous devez agir.
+Comment procédez-vous ?
+//1 Je sors. Aérer son esprit et experiencer de la nouveauté me reconnectera avec mon idée.
+//2 Je tente de canaliser mes pensées. J'essaye de créer une bulle dans laquelle l'ambiance se rapprochera le plus possible de mon idée.
+
+-----------------First path, l'appréhension d'autrui, le sixième sens
+
+*1 La tenue que vous portez semble déjà parfaitement adapatée à la situation extérieure. Vous n'avez rien pris de potentiellement encombrant sur vous et sortez sans plus attendre.
+Vous vivez dans un village. Vous ne vivez pas ici par choix mais vous avez appris à apprécier ce village tout de même. A la vue de l'extérieur une impression vous marque. Vous voyez
+mais vous sentez aveugle. Vous entendez mais vous pensez sourd... Déboussolé, vous commencez à avancer dans ce village qui ne ressemble à rien que vous n'ayez encore pu immaginer.
+Vous vous faites brusquement interrompre... Par un mur... Alors que vous êtes encore sonné vous entendez plusieurs voix provenant de toutes les directions. L'une d'entre elle
+vient soudainement s'adresser à vous.
+-"Hey gamin, tout va bien ?"
+//3 "Où suis-je ?"
+//4 "Qui êtes-vous ?"
+
+*3
+
+-"Où suis-je ?", demandez-vous timidement.
+-"Comment ça ?! T'es dans une mine là, il serait temps de se réveiller."
+
+La panique s'instaure en vous. Il n'y a pas de mine dans votre village... Enfin, normalement ?... Vous commencez à retrouver la vue. Une mine se dessine lentement autour de vous.
+La pièce est sombre, humide et vous entendez ce qui ressemble au choc d'un, non, de multiples outils contre les parrois de la pièce. Devant vous se tient une personne que vous trouvez
+totalement banale, des outils à la main. Derrière elle, une masse se forme comprenant plein d'autres travailleurs.
+
+-"Il va falloir que je te demande de sortir. Comment t'as pu arriver là même ??", dit le mineur prenant un air confus.
+
+Une petite boule ronde surgit alors de derrière sa tête et vient se poser dessus. Ce petit esprit possède deux minuscules yeux et des bras et des jambes en forme de battons. Elle est
+monochrome, arborant une couleur taupe un peu terne. La présence de cette créature génère en vous une sensation nouvelle qu'aucun autre de vos sens n'arrive à décrire.
+Vous sentez la présence de plusieurs de ces créatures là où vous êtes...
+
+//5 Chercher la présence de plus d'esprits
+//6 Demander des explications au mineur
+
+*4
+
+$5
+Vous ignorez complètement le mineur qui vous aggripe par l'épaule. L'esprit sur sa tête se met à grossir tout le long de la scène. Il devient oppressant et votre nouvelle sensation
+s'affole alors que les regards se tournent vers vous.
+-"Ca te dirait de ne pas de ne pas m'ignorer gamin ?! Tu es ici sur un lieu de travail, pas de jeu. Alors je ne sais pas ce qui t'es passé par la tête mais il va falloir que tu
+commences par me répondre avant de vouloir fuir comme cela."
+
+$6
+Vous demandez au mineur ce que la créature sur sa tête est.
+
+-"Une créature ?! Ma parole t'as pris un bon coup sur la tête toi. Les seules créatures que je connaisse dans cette grotte ce sont mes collègues haha !!"
+Le travailleur se rapproche de ses collègues.
+-"Bon les gars... Qui m'a laissé rentrer cette crevette ici ?"
+En vous rapprochant des autres travailleurs d'autres créatures surgissent petit à petit, une pour chaque travailleur. Toutes les créatures ont la même forme et l'exacte même
+couleur.
+En discutant plus profondément avec le mineur sur son travail et ses collègues vous appercevez une lueur brillante. La créature change de couleur au fil de la discussion jusqu'à
+arborer un jaune pétillant. Le mineur vous raccompagne à l'entrée de la mine. Vous le regardez une dernière fois lui, son grand sourire et son esprit jaune flamboyant. Le monde
+extérieur semble se reconstruire petit à petit. Vous arrivez à définir des formes plus distinctes et d'autres personnes. Toutes possèdent leur propre esprit terne.
+Toute sauf une, à votre gauche se trouve un grand parc duquel emmane cette sensation nouvelle. Elle est très forte, limite étouffante. Curieux de nouveauté vous vous aventurez dans
+le parc à la recherche de cette source d'énergie.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Le mineur
+La personne douce - dans un parc, chaleureuse, fortes sensations, notable en solo
+L'assassin --- BOSS
+
+
+--------------Second path, la signification des ambiances
+Les danseurs
+Le chevalier
+Le joueur d'arcade --- BOSS
