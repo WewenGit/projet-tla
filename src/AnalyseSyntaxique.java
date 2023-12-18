@@ -1,5 +1,7 @@
 import java.util.List;
 
+import javax.swing.JFrame;
+
 public class AnalyseSyntaxique {
 
 	private List<Token> tokens;
@@ -9,18 +11,23 @@ public class AnalyseSyntaxique {
         return tokens.get(pos).getTypeDeToken();
     }
 
-    public Token lireToken(){
-        return tokens.get(pos++);
+    public Token getToken(){
+        return tokens.get(pos);
+    }
+
+    public void nextToken(){
+        this.pos++;
     }
 
     public boolean finAtteinte(){
         return pos>=tokens.size();
     }
 
-    public int S(){
-        if (this.getTypeDeToken()==TypeDeToken.intVal || this.getTypeDeToken()==TypeDeToken.leftPar) {
-            int i = A();
-            return S_prime(i);
+    public void S(){
+        if (this.getTypeDeToken()==TypeDeToken.scene) {
+            String value = getToken().getValeur();
+            int id = getToken().getId();
+            A();
         }
         else{
             throw new IllegalArgumentException();
@@ -79,10 +86,10 @@ public class AnalyseSyntaxique {
         }
     }
 
-    public Integer analyse(List<Token> tokens){
+    public void analyse(List<Token> tokens, JFrame window){
         this.pos=0;
         this.tokens=tokens;
-        return S();
+        S();
     }
 
 }
