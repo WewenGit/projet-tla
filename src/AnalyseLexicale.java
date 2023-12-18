@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AnalyseLexicale {
@@ -12,40 +13,42 @@ public class AnalyseLexicale {
 	 */
 	private static Integer TRANSITIONS[][] = {
 		//       espace|lettre|  ¤|chiffre|   *|   /|   $
-		/*  0*/ {     0,     1,  1,      1,   2,   4,   7},
-		/*  1*/ {   101,     1,101,      1, 101, 101, 101},
-		/*  2*/ {   101,   101,101,      3, 101, 101, 101},
-		/*  3*/ {   102,   102,102,      3, 102, 102, 102},
-		/*  4*/ {   101,   101,101,    101, 101,   5, 101},
-		/*  5*/ {   101,   101,101,      6, 101, 101, 101},
-		/*  6*/ {   103,   103,103,      6, 103, 103, 103},
-		/*  7*/ {   101,   101,101,      8, 101, 101, 101},
-		/*  8*/ {   104,   104,104,      8, 104, 104, 104}};
+		/*  0*/ {     0,     0,  0,      0,   1,   3,   6},
+		/*  1*/ {     0,     0,  0,      2,   0,   0,   0},
+		/*  2*/ {   101,   101,101,      2, 101, 101, 101},
+		/*  3*/ {     0,     0,  0,      0,   0,   4,   0},
+		/*  4*/ {     0,     0,  0,      5,   0,   0,   0},
+		/*  5*/ {   102,   102,102,      5, 102, 102, 102},
+		/*  6*/ {     0,     0,  0,      7,   0,   0,   0},
+		/*  7*/ {   103,   103,103,      7, 103, 103, 103}};
 		//état > 100 = états d'acceptation
 		//espace inclut également les retours à la ligne
 		//¤ = , . ( ) ' + = [ ] { } # ~ - @ ! : ; ? °
-		//101   mot + rollback
-		//102 scene + rollback
-		//103 choix + rollback
-		//104   fin + rollback
+		//101 scene + rollback
+		//102 choix + rollback
+		//103   fin + rollback
+	
+	private static ArrayList<Character> Symbols = new ArrayList<Character>(Arrays.asList(
+		',', '.', '(', ')', '\'', '+', '=',
+		'[', ']', '{', '}', '#', '~', '-',
+		'@', '!', ':', ';', '?', '°'
+	));
 
 	public int indiceSymbole(Character c) throws IllegalCharacterException{
 		if (c==null) return 0;
-
-		switch (c) {
-			case '+': return 1;
-			case '*': return 2;
-			case '(': return 3;
-			case ')': return 4;
-			case ',': return 5;
-			case '=': return 6;
-			case '!': return 7;
-		
-			default:
-				if(Character.isWhitespace(c)) return 0;
-				if (Character.isLetter(c)) return 9;
-				if (Character.isDigit(c)) return 8;
-				throw new IllegalCharacterException();
+		if (Symbols.contains(c)) return 2;
+		else {
+			switch (c) {
+				case '*': return 4;
+				case '/': return 5;
+				case '$': return 6;
+			
+				default:
+					if (Character.isWhitespace(c)) return 0;
+					if (Character.isLetter(c)) return 1;
+					if (Character.isDigit(c)) return 3;
+					throw new IllegalCharacterException();
+			}
 		}
 	}
 
@@ -80,69 +83,19 @@ public class AnalyseLexicale {
 			i=this.indiceSymbole(c);
 			prochainEtat=TRANSITIONS[etat][i];
 
-			switch (prochainEtat) {
-				case 3:
-					value+=c.toString();
-					etat=prochainEtat;
-					break;
-				case 4:
-					value+=c.toString();
-					etat=prochainEtat;
-					break;
-				case 101:
-					al.add(new Token(TypeDeToken.add, "+"));
-					etat=ETAT_INITIAL;
-					break;
-				case 102:
-					al.add(new Token(TypeDeToken.multiply, "*"));
-					etat=ETAT_INITIAL;
-					break;
-				case 103:
-					al.add(new Token(TypeDeToken.leftPar, "("));
-					etat=ETAT_INITIAL;
-					break;
-				case 104:
-					al.add(new Token(TypeDeToken.rightPar, ")"));
-					etat=ETAT_INITIAL;
-					break;
-				case 105:
-					al.add(new Token(TypeDeToken.comma, ","));
-					etat=ETAT_INITIAL;
-					break;
-				case 106:
-					al.add(new Token(TypeDeToken.assign, "="));
-					this.retourArriere();
-					etat=ETAT_INITIAL;
-					break;
-				case 107:
-					al.add(new Token(TypeDeToken.equal, "=="));
-					etat=ETAT_INITIAL;
-					break;
-				case 108:
-					al.add(new Token(TypeDeToken.logicalNeg, "!"));
-					this.retourArriere();
-					etat=ETAT_INITIAL;
-					break;
-				case 109:
-					al.add(new Token(TypeDeToken.notEqual, "!="));
-					etat=ETAT_INITIAL;
-					break;
-				case 110:
-					al.add(new Token(TypeDeToken.intVal,value));
-					value="";
-					this.retourArriere();
-					etat=ETAT_INITIAL;
-					break;
-				case 111:
-					al.add(new Token(TypeDeToken.ident,value));
-					value="";
-					this.retourArriere();
-					etat=ETAT_INITIAL;
-					break;
-			
-				default:
-					etat=prochainEtat;
-					break;
+			if (prochainEtat >= 100) {
+				if (prochainEtat == 101) {
+					al.add(new Token(TypeDeToken.scene, value));
+				} else if (prochainEtat == 102) {
+					al.add(new Token(TypeDeToken.choice, value));
+				} else if (prochainEtat == 103) {
+					al.add(new Token(TypeDeToken.end, value));
+				}
+				etat = 0;
+				value = "";
+			} else {
+				etat = prochainEtat;
+				if (etat>0) value += c;
 			}
 
 		} while (c!=null);
