@@ -2,12 +2,12 @@ public class Token {
 
 	private TypeDeToken typeDeToken;
 	private String valeur;
-	private int id;
+	private int number;
 
-	public Token(TypeDeToken typeDeToken, String value, int id) {
+	public Token(TypeDeToken typeDeToken, String value, int number) {
 		this.typeDeToken=typeDeToken;
 		this.valeur=value;
-		this.id=id;
+		this.number=number;
 	}
 
 	public Token(TypeDeToken typeDeToken) {
@@ -23,12 +23,8 @@ public class Token {
 		return this.valeur;
 	}
 
-	public int getId() {
-		return this.id;
-	}
-
-	public String toString() {
-		return "["+this.typeDeToken+"]" + " " + this.valeur;
+	public int getNumber() {
+		return this.number;
 	}
 
 }
