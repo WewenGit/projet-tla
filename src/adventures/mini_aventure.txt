@@ -1,0 +1,93 @@
+*0
+Vous avez noclip à travers la réalité et vous vous retrouvez dans un long couloir qui semble s'étendre à l'infini.
+Vous ne distinguez aucune différence entre devant et derrière vous.
+Que faites-vous?#
+//5 Vous attendez ici.#
+//3 Vous partez vers l'avant.#
+//7 Vous partez vers l'arrière.#
+
+$1
+Vous entrez dans quelque unes des boutiques esperant trouver une porte de sortie de secour.
+Dans l'une d'entre elle vous entendez, pour la première fois depuis longtemps, un bruit dont vous n'êtes pas la source, il provient de derrière vous.
+Vous vous retournez par reflexe, et sans comprendre comment vous vous faitez attirer dans une sorte de portail qui vous fait tomber dans... votre canapé...?
+Vous êtes... chez vous? Tout ceci n'était alors qu'un rêve?
+La marque noire de main sur votre poignet vous laisse supposer que non.
+Quoi qu'il en soit vous êtes sauf.#
+
+*2
+Vous êtes reveillé par une intense sensation de froid, et vous réalisez que vous êtes en train de vous noyer.
+Vous reprennez vite vos esprit et remontez à la surface, le lieu où vous aviez décidé de dormir n'est plus, à la place, un océan à perte de vue.
+Dans la panique vous parvenez tout de même à distinguer un bâteau en bois non loins.#
+//9 Vous y allez à la nage#
+//11 Vous faites l'étoile affin d'économisez vos forces.#
+
+$3
+Vous marchez encore et encore dans ce long couloir vide.
+L'idée de faire demi tour vous traverse l'esprit, mais soudain, vous réalisez que vous ne savez même plus dans quel sens vous marchez depuis tout à l'heure.
+Vos sens sont si confus que vous ne distinguez même plus le haut du bas.
+Vous vous écroulez sous la fatigue.
+Il semblerait que votre prériple touche à sa fin.#
+
+*4
+Le couloir semble ne jamais finir, cela fait bientôt une heure que vous marchez.#
+//2 Vous vous arrêtez pour vous reposer.#
+//3 Vous continuez encore. Ce couloir doit bien avoir une fin!#
+
+*5
+Vous attendez quelques minutes sur place un peu déboussolé et vous réalisez que le couloir est devenu un croisement vous ne savez comment.
+Vous pouvez maintenant aller dans 4 directions.#
+//3 Vous allez à gauche.#
+//4 Vous allez à droite.#
+//7 Vous allez à l'avant.#
+//6 Vous allez à l'arrière.#
+
+*6
+Au bout de quelques mètres seulement, le sol se dérobe sous vos pieds laissant apparaitre un gouffre béant.
+Vous y tombez avant d'avoir le temps de réagir et, alors que vous pensiez mourrir, vous atterissez dans un canapé géant et moelleux.
+Vous regardez autour de vous, et vos yeux semblent vous jouer des tours.
+Vous êtes dans ce qui ressemble à une cuisine, à ceci prêt que tout y est 10 fois trop grand, et qu'il n'y a pas la moindre vie ni le moindre son.
+Un silence total.#
+//2 Vous marquez un arrêt dans votre aventure le temps de dormir.#
+//8 Vous tentez de descendre du canapé pour explorer cette étrange place.#
+//10 Vous essayez de grimper en haut du canapé pour voir ce qui se trouve derrière.#
+
+
+*7
+Après quelques longues et angoissantes minutes dans ce couloir monochrome, vous arrivez dans une grande pièce qui vous évoque un centre commerciale à l'abandon.
+Vous y trouvez un vieux parques pour enfants et des commerces en tout genre, cependant, l'absence totale de gens rend l'endroit dérrangeant, presque pesant.#
+//2 Vous vous arrêtez ici pour vous reposer, après tout vous ne savez pas ce qui vous attend après et l'endroit semble paisible.#
+//1 Vous continuez à marcher tout droit jusqu'à ce que vous trouviez une sortie.#
+
+$8
+Une fois en bas, vous constatez la taille absurde de la pièce. L'endroit est tout simplement trop grand pour vos petites jambes fragiles.
+Vous essayez d'avancer tout de même vers la seule chose qui vous semble atteignable en terme de distance, le bas de ce qui semble être le meuble contenant le lavabo. Après deux longues heure de marche environs, vous y arrivez enfin.
+Chose étrange, vous y voyez une porte, mais pas n'importe quelle porte.
+Une porte à votre taille, qui plus est, elle vous est famillière.
+Vous ouvrez la porte et vous comprenez soudain cette familliarité.
+Cette porte donne sur votre chez vous.
+Vous entrez sans hésité, soulagé et épuisé.
+Vous êtes sauf.#
+
+*9
+Vous parvenez jusqu'au bâteau tant bien que mal, vous montez à bord, et vous n'y trouvez aucun signe de vie.#
+//13 Vous allez voir la calle.#
+//12 Vous allez au niveau de la bar pour tenter de faire bouger ce vieux raffiot.#
+
+$10 Vous arrivez en haut du canapé, vous commencez à regarder ce qu'il y a en contrebat.
+Soudain, alors que vous étiez certains d'être seul, des mains vous poussent dans votre dos. Alors que vous tombez vous parvenez à voir une silouhette vous regardant de loin.
+Le contact avec le sols sera mortel et vous le savez...
+Il semblerait que votre prériple touche à sa fin.#
+
+$11
+Vous tentez de rester immobile et vous vous concentrez sur votre souffle. Après quelques instants vous vous redressez plein d'energie et parfaitement calme. Le bâteau n'est plus là...
+Après plusieurs heures à vagabonder dans ces eaux infini, l'épuisement vous fait couler, et la noyade vous éteint.
+Il semblerait que votre prériple touche à sa fin.#
+
+$12
+Quand vous posez vos mains sur la bar, une substance gluante s'en degage et vous y colle. Vous ne parvenez plus à en bouger et vous réalisez que la substance monte lentement jusqu'à votre tête, bientôt vous ne pourrez plus respirer.
+Il semblerait que votre prériple touche à sa fin.#
+
+$13
+Quand vous ouvrez la porte qui mène à la calle, vous restez figé un instant, de l'autre côté de cette porte se trouve votre bureau.
+Il semblerait que cette porte soit une sortie. Vous n'hésitez pas longtemps avant de vous y engouffrer pour quitter cet endroit maudit.
+Vous voilà rentré chez vous, non sans sequels psychologiques.#

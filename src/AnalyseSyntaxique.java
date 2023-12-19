@@ -11,6 +11,9 @@ public class AnalyseSyntaxique {
 
 
     public TypeDeToken getTypeDeToken(){
+        if (pos==this.tokens.size()) {
+            return null;
+        }
         return tokens.get(pos).getTypeDeToken();
     }
 

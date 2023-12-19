@@ -36,7 +36,7 @@ public class AnalyseLexicale {
 	private static ArrayList<Character> Symbols = new ArrayList<Character>(Arrays.asList(
 		',', '.', '(', ')', '\'', '+', '=',
 		'[', ']', '{', '}', '~', '-',
-		'@', '!', ':', ';', '?', '°'
+		'@', '!', ':', ';', '?', '°','"'
 	));
 
 	public int indiceSymbole(Character c) throws IllegalCharacterException{
