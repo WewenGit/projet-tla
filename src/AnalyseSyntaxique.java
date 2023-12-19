@@ -1,61 +1,25 @@
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JFrame;
 
 public class AnalyseSyntaxique {
 
-    
 	private List<Token> tokens;
     private int pos;
-
-    private class Scene{
-        private String text;
-        private boolean isEnd;
-    
-        public Scene(String text, boolean isEnd) {
-            this.text = text;
-            this.isEnd = isEnd;
-        }
-    
-        public String getText() {
-            return text;
-        }
-    
-        public boolean isEnd() {
-            return isEnd;
-        }
-    }
-
-    private class Choice{
-        private String text;
-        private int nextScene;
-    
-        public Choice(String text, int nextScene) {
-            this.text = text;
-            this.nextScene = nextScene;
-        }
-    
-        public String getText() {
-            return text;
-        }
-    
-        public int getNextScene() {
-            return nextScene;
-        }
-    }
-
-
     private List<Scene> scenes;
     private List<Choice> choices;
-    private int numberOfChoices;
+    private Game game;
 
 
     public TypeDeToken getTypeDeToken(){
         return tokens.get(pos).getTypeDeToken();
     }
 
-    public Token getToken(){
-        return tokens.get(pos);
+    public String getValeur(){
+        return tokens.get(pos).getValeur();
+    }
+
+    public int getNumber(){
+        return tokens.get(pos).getNumber();
     }
 
     public void nextToken(){
@@ -66,13 +30,14 @@ public class AnalyseSyntaxique {
         return pos>=tokens.size();
     }
 
-    public void analyse(List<Token> tokens, JFrame window){
+    public Game analyse(List<Token> tokens){
         this.pos=0;
-        this.numberOfChoices=0;
         this.tokens=tokens;
         this.scenes = new ArrayList<>();
         this.choices = new ArrayList<>();
         S();
+        this.game = new Game(scenes,choices);
+        return game;
     }
 
 
@@ -83,27 +48,28 @@ public class AnalyseSyntaxique {
 
     public void S(){
         if (this.getTypeDeToken()==TypeDeToken.scene) {
-            Scene s = new Scene(getToken().getValeur(), false);
-            scenes.set(getToken().getNumber(),s);
+            int number = getNumber();
+            Scene s = new Scene(number, getValeur(), false);
+            scenes.add(s);
             nextToken();
-            C();
+            C(number);
         }
         else{
             throw new IllegalArgumentException();
         }
     }
 
-    public void C(){
+    public void C(int relatedTo){
         if (this.getTypeDeToken()==TypeDeToken.choice) {
-            Choice c = new Choice(getToken().getValeur(), getToken().getNumber());
-            choices.set(numberOfChoices++,c);
+            Choice c = new Choice(relatedTo, getValeur(), getNumber());
+            choices.add(c);
             nextToken();
             if (!finAtteinte()){
                 if (this.getTypeDeToken()==TypeDeToken.scene) {
                     S();
                 }
                 if (this.getTypeDeToken()==TypeDeToken.choice) {
-                    C();
+                    C(relatedTo);
                 }
                 if (this.getTypeDeToken()==TypeDeToken.end) {
                     E();
@@ -116,8 +82,9 @@ public class AnalyseSyntaxique {
     }
 
     public void E(){
-        Scene s = new Scene(getToken().getValeur(), true);
-        scenes.set(getToken().getNumber(), s);
+        Scene s = new Scene(getNumber(), getValeur(), true);
+        scenes.add(s);
+        nextToken();
         if (!finAtteinte()){
             if (this.getTypeDeToken()==TypeDeToken.scene) {
                 S();

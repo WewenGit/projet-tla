@@ -12,25 +12,30 @@ public class AnalyseLexicale {
 	Table de transition de l'analyse lexicale
 	 */
 	private static Integer TRANSITIONS[][] = {
-		//       espace|lettre|  ¤|chiffre|   *|   /|   $
-		/*  0*/ {     0,     0,  0,      0,   1,   3,   6},
-		/*  1*/ {     0,     0,  0,      2,   0,   0,   0},
-		/*  2*/ {   101,   101,101,      2, 101, 101, 101},
-		/*  3*/ {     0,     0,  0,      0,   0,   4,   0},
-		/*  4*/ {     0,     0,  0,      5,   0,   0,   0},
-		/*  5*/ {   102,   102,102,      5, 102, 102, 102},
-		/*  6*/ {     0,     0,  0,      7,   0,   0,   0},
-		/*  7*/ {   103,   103,103,      7, 103, 103, 103}};
+		//       espace|lettre|  ¤|chiffre|   *|   /|   $|   #|
+		/*  0*/ {     0,     0,  0,      0,   1,   3,   6,   0},
+		/*  1*/ {     0,     0,  0,      2,   0,   0,   0,   0},
+		/*  2*/ {     8,     8,  8,      2,   8,   8,   8,   8},
+		/*  3*/ {     0,     0,  0,      0,   0,   4,   0,   0},
+		/*  4*/ {     0,     0,  0,      5,   0,   0,   0,   0},
+		/*  5*/ {     9,     9,  9,      5,   9,   9,   9,   9},
+		/*  6*/ {     0,     0,  0,      7,   0,   0,   0,   0},
+		/*  7*/ {    10,    10, 10,      7,  10,  10,  10,  10},
+
+		/*  8*/ {     8,     8,  8,      8,   8,   8,   8, 101},
+		/*  9*/ {     9,     9,  9,      9,   9,   9,   9, 102},
+		/*  10*/ {   10,    10, 10,     10,  10,  10,  10, 103}
+	};
 		//état > 100 = états d'acceptation
 		//espace inclut également les retours à la ligne
-		//¤ = , . ( ) ' + = [ ] { } # ~ - @ ! : ; ? °
+		//¤ = , . ( ) ' + = [ ] { } ~ - @ ! : ; ? °
 		//101 scene + rollback
 		//102 choix + rollback
 		//103   fin + rollback
 	
 	private static ArrayList<Character> Symbols = new ArrayList<Character>(Arrays.asList(
 		',', '.', '(', ')', '\'', '+', '=',
-		'[', ']', '{', '}', '#', '~', '-',
+		'[', ']', '{', '}', '~', '-',
 		'@', '!', ':', ';', '?', '°'
 	));
 
@@ -42,6 +47,7 @@ public class AnalyseLexicale {
 				case '*': return 4;
 				case '/': return 5;
 				case '$': return 6;
+				case '#': return 7;
 			
 				default:
 					if (Character.isWhitespace(c)) return 0;
@@ -63,9 +69,6 @@ public class AnalyseLexicale {
 		}
 	}
 
-	public void retourArriere(){
-		this.pos--;
-	}
 
 	public List<Token> analyse(String entree) throws IllegalCharacterException {
 		this.entree=entree;
@@ -76,6 +79,7 @@ public class AnalyseLexicale {
 		ArrayList<Token> al = new ArrayList<>();
 		int prochainEtat;
 		String value="";
+		String number="";
 
 		int etat = ETAT_INITIAL;
 		do {
@@ -85,17 +89,23 @@ public class AnalyseLexicale {
 
 			if (prochainEtat >= 100) {
 				if (prochainEtat == 101) {
-					al.add(new Token(TypeDeToken.scene, value));
+					al.add(new Token(TypeDeToken.scene, value, Integer.parseInt(number)));
 				} else if (prochainEtat == 102) {
-					al.add(new Token(TypeDeToken.choice, value));
+					al.add(new Token(TypeDeToken.choice, value, Integer.parseInt(number)));
 				} else if (prochainEtat == 103) {
-					al.add(new Token(TypeDeToken.end, value));
+					al.add(new Token(TypeDeToken.end, value, Integer.parseInt(number)));
 				}
 				etat = 0;
 				value = "";
+				number="";
 			} else {
+				if (prochainEtat==2 ||prochainEtat==5 || prochainEtat==7) {
+					number += c;
+				}
+				if (prochainEtat==8 ||prochainEtat==9 ||prochainEtat==10) {
+					value+=c;
+				}
 				etat = prochainEtat;
-				if (etat>0) value += c;
 			}
 
 		} while (c!=null);

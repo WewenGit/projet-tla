@@ -27,4 +27,8 @@ public class Token {
 		return this.number;
 	}
 
+	public String toString(){
+		return "Type de token : "+this.typeDeToken+", value : "+this.valeur+", number : "+this.number;
+	}
+
 }
