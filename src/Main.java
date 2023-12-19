@@ -166,7 +166,7 @@ public class Main extends JFrame {
 
 	public static void main(String[] args) throws IllegalCharacterException, FileNotFoundException {
 		AnalyseLexicale al = new AnalyseLexicale();
-		File textFile = new File("src/adventures/mini_aventure.txt");
+		File textFile = new File("adventures/mini_aventure.txt");
 		Scanner sc = new Scanner(textFile);
 		String txt = "";
 		while (sc.hasNextLine()) {
