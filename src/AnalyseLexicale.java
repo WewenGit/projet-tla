@@ -82,24 +82,17 @@ public class AnalyseLexicale {
 			prochainEtat = TRANSITIONS[etat][i];
 
 			if (prochainEtat >= 100) {
-				if (prochainEtat == 103) {
-					al.add(new Token(TypeDeToken.text, value.substring(1), 0));
-				}
-				else {
-					al.add(new Token(TypeDeToken.values()[prochainEtat - 100], value, Integer.parseInt(value)));
-				}
+				if (prochainEtat == 102) al.add(new Token(TypeDeToken.number, "", Integer.parseInt(value)));
+				else if (prochainEtat == 103) al.add(new Token(TypeDeToken.text, value.substring(1), 0));
+				else al.add(new Token(TypeDeToken.values()[prochainEtat - 101], value, 0));
 				
-				if (prochainEtat >= 101 && prochainEtat <= 102) {
-					pos -= 1; // retour arrière (rollback)
-				}
+				if (prochainEtat >= 101 && prochainEtat <= 102) pos -= 1; // retour arrière (rollback)
 				
 				etat = 0;
 				value = "";
 			}
 			else {
-				if (prochainEtat > 0) {
-					value += c;
-				}
+				if (prochainEtat > 0) value += c;
 				etat = prochainEtat;
 			}
 
