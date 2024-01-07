@@ -83,7 +83,7 @@ public class AnalyseLexicale {
 
 			if (prochainEtat >= 100) {
 				if (prochainEtat == 103) {
-					al.add(new Token(TypeDeToken.values()[prochainEtat - 100], value, Integer.parseInt(value.substring(1))));
+					al.add(new Token(TypeDeToken.text, value.substring(1), 0));
 				}
 				else {
 					al.add(new Token(TypeDeToken.values()[prochainEtat - 100], value, Integer.parseInt(value)));
