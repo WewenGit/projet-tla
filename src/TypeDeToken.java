@@ -1,5 +1,10 @@
 public enum TypeDeToken {
-	scene,
+	keyWord,
+	number,
+	text,
+	sectionStart,
+	sectionEnd,
 	choice,
-	end
+	conditionStart,
+	conditionEnd
 }
