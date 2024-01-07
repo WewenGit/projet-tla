@@ -55,7 +55,6 @@ public class AnalyseLexicale {
 		}
 	}
 
-
 	public Character lireCaractere() {
 		try {
 			Character ret = this.entree.charAt(pos);
@@ -65,9 +64,8 @@ public class AnalyseLexicale {
 			return null;
 		}
 	}
-
-
-	public List<Token> analyse(String entree) throws IllegalCharacterException {
+ 
+	public List<Token> analyse(String entree) {
 		this.entree = entree;
 		this.pos = 0;
 
@@ -84,16 +82,17 @@ public class AnalyseLexicale {
 			prochainEtat = TRANSITIONS[etat][i];
 
 			if (prochainEtat >= 100) {
-				switch (prochainEtat) {
-					case 101: al.add(new Token(TypeDeToken.keyWord, value, Integer.parseInt(value)));
-					case 102: al.add(new Token(TypeDeToken.number, value, Integer.parseInt(value)));
-					case 103: al.add(new Token(TypeDeToken.text, value, Integer.parseInt(value)));
-					case 104: al.add(new Token(TypeDeToken.sectionStart, value, Integer.parseInt(value)));
-					case 105: al.add(new Token(TypeDeToken.sectionEnd, value, Integer.parseInt(value)));
-					case 106: al.add(new Token(TypeDeToken.keyWord, value, Integer.parseInt(value)));
-					case 107: al.add(new Token(TypeDeToken.conditionStart, value, Integer.parseInt(value)));
-					case 108: al.add(new Token(TypeDeToken.conditionEnd, value, Integer.parseInt(value)));
+				if (prochainEtat == 103) {
+					al.add(new Token(TypeDeToken.values()[prochainEtat - 100], value, Integer.parseInt(value.substring(1))));
 				}
+				else {
+					al.add(new Token(TypeDeToken.values()[prochainEtat - 100], value, Integer.parseInt(value)));
+				}
+				
+				if (prochainEtat >= 101 && prochainEtat <= 102) {
+					pos -= 1; // retour arrière (rollback)
+				}
+				
 				etat = 0;
 				value = "";
 			}
