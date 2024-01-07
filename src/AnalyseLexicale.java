@@ -6,60 +6,57 @@ public class AnalyseLexicale {
 
 	private static final int ETAT_INITIAL = 0;
 	private String entree;
-	private int pos=0;
+	private int pos = 0;
 
 	/*
 	Table de transition de l'analyse lexicale
 	 */
 	private static Integer TRANSITIONS[][] = {
-		//       espace|lettre|  ¤|chiffre|   *|   /|   $|   #|
-		/*  0*/ {     0,     0,  0,      0,   1,   3,   6,   0},
-		/*  1*/ {     0,     0,  0,      2,   0,   0,   0,   0},
-		/*  2*/ {     8,     8,  8,      2,   8,   8,   8,   8},
-		/*  3*/ {     0,     0,  0,      0,   0,   4,   0,   0},
-		/*  4*/ {     0,     0,  0,      5,   0,   0,   0,   0},
-		/*  5*/ {     9,     9,  9,      5,   9,   9,   9,   9},
-		/*  6*/ {     0,     0,  0,      7,   0,   0,   0,   0},
-		/*  7*/ {    10,    10, 10,      7,  10,  10,  10,  10},
+			//	   espace|lettre|chiffre|  "|  {|  }|  -|  (|  )|autre
+			/*0*/ {     0,     1,      2,  3,104,105,106,107,108,    0},
+			/*1*/ {   101,     1,      1,101,101,101,101,101,101,  101},
+			/*2*/ {   102,   102,      2,102,102,102,102,102,102,  102},
+			/*3*/ {     3,     3,      3,103,  3,  3,  3,  3,  3,    3}
+			};
 
-		/*  8*/ {     8,     8,  8,      8,   8,   8,   8, 101},
-		/*  9*/ {     9,     9,  9,      9,   9,   9,   9, 102},
-		/*  10*/ {   10,    10, 10,     10,  10,  10,  10, 103}
-	};
-		//état > 100 = états d'acceptation
-		//espace inclut également les retours à la ligne
-		//¤ = , . ( ) ' + = [ ] { } ~ - @ ! : ; ? °
-		//101 scene + rollback
-		//102 choix + rollback
-		//103   fin + rollback
-	
-	private static ArrayList<Character> Symbols = new ArrayList<Character>(Arrays.asList(
-		',', '.', '(', ')', '\'', '+', '=',
-		'[', ']', '{', '}', '~', '-',
-		'@', '!', ':', ';', '?', '°','"'
-	));
+			// espace inclut egalement les retours a la ligne
+			// autre = tout autre caractere
+			// etat > 100 = etats d'acceptation
+			// 101 MotClef + rollback
+			// 102 Nombre + rollback
+			// 103 Texte
+			// 104 DebutSection
+			// 105 FinSection
+			// 106 Choix
+			// 107 DebutCondition
+			// 108 FinCondition
+			// NB: penser à supprimer le 1ere caractere des textes qui sera inévitablement '"'
+			// NB: quand on est dans l'état 0, il ne faut pas enregistrer les caractères et
+			// a plus forte raison il faut vider le buffer s'il n'est pas deja vide.
+			// Dis autrement, tout ce qui est en etat 0 doit etre simplement ignore.
 
-	public int indiceSymbole(Character c) throws IllegalCharacterException{
-		if (c==null) return 0;
-		if (Symbols.contains(c)) return 2;
+	public int indiceSymbole(Character c) {
+		if (c == null) return 0;
 		else {
 			switch (c) {
-				case '*': return 4;
-				case '/': return 5;
-				case '$': return 6;
-				case '#': return 7;
+				case '"': return 3;
+				case '{': return 4;
+				case '}': return 5;
+				case '-': return 6;
+				case '(': return 7;
+				case ')': return 8;
 			
 				default:
 					if (Character.isWhitespace(c)) return 0;
-					if (Character.isLetter(c)) return 1;
-					if (Character.isDigit(c)) return 3;
-					throw new IllegalCharacterException();
+					else if (Character.isLetter(c)) return 1;
+					else if (Character.isDigit(c)) return 2;
+					else return 9;
 			}
 		}
 	}
 
 
-	public Character lireCaractere(){
+	public Character lireCaractere() {
 		try {
 			Character ret = this.entree.charAt(pos);
 			this.pos++;
@@ -71,44 +68,43 @@ public class AnalyseLexicale {
 
 
 	public List<Token> analyse(String entree) throws IllegalCharacterException {
-		this.entree=entree;
-		this.pos=0;
+		this.entree = entree;
+		this.pos = 0;
 
 		Character c;
 		int i;
 		ArrayList<Token> al = new ArrayList<>();
 		int prochainEtat;
-		String value="";
-		String number="";
+		String value = "";
 
 		int etat = ETAT_INITIAL;
 		do {
-			c=this.lireCaractere();
-			i=this.indiceSymbole(c);
-			prochainEtat=TRANSITIONS[etat][i];
+			c = this.lireCaractere();
+			i = this.indiceSymbole(c);
+			prochainEtat = TRANSITIONS[etat][i];
 
 			if (prochainEtat >= 100) {
-				if (prochainEtat == 101) {
-					al.add(new Token(TypeDeToken.scene, value, Integer.parseInt(number)));
-				} else if (prochainEtat == 102) {
-					al.add(new Token(TypeDeToken.choice, value, Integer.parseInt(number)));
-				} else if (prochainEtat == 103) {
-					al.add(new Token(TypeDeToken.end, value, Integer.parseInt(number)));
+				switch (prochainEtat) {
+					case 101: al.add(new Token(TypeDeToken.keyWord, value, Integer.parseInt(value)));
+					case 102: al.add(new Token(TypeDeToken.number, value, Integer.parseInt(value)));
+					case 103: al.add(new Token(TypeDeToken.text, value, Integer.parseInt(value)));
+					case 104: al.add(new Token(TypeDeToken.sectionStart, value, Integer.parseInt(value)));
+					case 105: al.add(new Token(TypeDeToken.sectionEnd, value, Integer.parseInt(value)));
+					case 106: al.add(new Token(TypeDeToken.keyWord, value, Integer.parseInt(value)));
+					case 107: al.add(new Token(TypeDeToken.conditionStart, value, Integer.parseInt(value)));
+					case 108: al.add(new Token(TypeDeToken.conditionEnd, value, Integer.parseInt(value)));
 				}
 				etat = 0;
 				value = "";
-				number="";
-			} else {
-				if (prochainEtat==2 ||prochainEtat==5 || prochainEtat==7) {
-					number += c;
-				}
-				if (prochainEtat==8 ||prochainEtat==9 ||prochainEtat==10) {
-					value+=c;
+			}
+			else {
+				if (prochainEtat > 0) {
+					value += c;
 				}
 				etat = prochainEtat;
 			}
 
-		} while (c!=null);
+		} while (c != null);
 
 		return al;
 	}
