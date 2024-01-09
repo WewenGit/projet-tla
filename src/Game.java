@@ -1,12 +1,15 @@
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private List<Scene> scenes;
     private List<Choice> choices;
+    private Map<String,Boolean> conditions;
 
-    public Game(List<Scene> scenes, List<Choice> choices){
+    public Game(List<Scene> scenes, List<Choice> choices, Map<String,Boolean> conditions){
         this.scenes = scenes;
         this.choices = choices;
+        this.conditions=conditions;
     }
 
     public List<Scene> getScenes(){
@@ -14,6 +17,9 @@ public class Game {
     }
     public List<Choice> getChoices(){
         return this.choices;
+    }
+    public Map<String,Boolean> getConditions(){
+        return this.conditions;
     }
 
     public String toString(){
