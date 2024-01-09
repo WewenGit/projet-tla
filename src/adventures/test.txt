@@ -1,0 +1,9 @@
+Condition   "estVivant"   false
+
+Scene 0
+{
+"Je suis un texte"
+-1 "choix 1"
+-2 "choix 2"
+if (estVivant) { -3 "choix 3" }
+}

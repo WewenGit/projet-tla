@@ -110,7 +110,8 @@ public class Main extends JFrame {
 		//GAME PARAMETERS
 		AnalyseSyntaxique ansyn = new AnalyseSyntaxique();
 		Game game = ansyn.analyse(lt);
-		boolean inGame=true;
+		System.out.println(game);
+		/*boolean inGame=true;
 		List<JButton> buttonList = new ArrayList<>();
 		boolean endBool=true;
 
@@ -201,7 +202,7 @@ public class Main extends JFrame {
 				redraw(window);
 				endBool=false;
 			}
-		}
+		}*/
 	}
 
 	private static void redraw(JFrame window) {
@@ -214,7 +215,7 @@ public class Main extends JFrame {
 
 	public static void main(String[] args) throws IllegalCharacterException, FileNotFoundException {
 		AnalyseLexicale al = new AnalyseLexicale();
-		File textFile = new File("src/adventures/mini_aventure.txt");
+		File textFile = new File("src/adventures/test.txt");
 		Scanner sc = new Scanner(textFile);
 		String txt = "";
 		while (sc.hasNextLine()) {
@@ -223,9 +224,9 @@ public class Main extends JFrame {
 		}
 		sc.close();
 		List<Token> lt = al.analyse(txt);
-		/*for (Token token : lt) {
+		for (Token token : lt) {
 			System.out.println(token);
-		}*/
+		}
 		run(lt);
 	}
 }

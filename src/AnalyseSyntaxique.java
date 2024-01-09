@@ -1,5 +1,7 @@
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AnalyseSyntaxique {
 
@@ -7,6 +9,7 @@ public class AnalyseSyntaxique {
     private int pos;
     private List<Scene> scenes;
     private List<Choice> choices;
+    private Map<String, Boolean> conditions = new HashMap<>();
     private Game game;
 
 
@@ -50,55 +53,122 @@ public class AnalyseSyntaxique {
 
 
     public void S(){
-        if (this.getTypeDeToken()==TypeDeToken.scene) {
-            int number = getNumber();
-            Scene s = new Scene(number, getValeur(), false);
-            scenes.add(s);
-            nextToken();
-            C(number);
+        if (this.getTypeDeToken()==TypeDeToken.keyWord) {
+            if (getValeur()=="Condition") {
+                nextToken();
+                C();
+            }
+            else if (getValeur()=="Scene") {
+                nextToken();
+                SC();
+            }
+            else if(getValeur()=="Personnage"){
+                //TODO
+            }
+            
         }
-        else{
-            throw new IllegalArgumentException();
+        else if (!finAtteinte()) {
+            throw new IllegalArgumentException("Missing keyword");
         }
     }
 
-    public void C(int relatedTo){
-        if (this.getTypeDeToken()==TypeDeToken.choice) {
-            Choice c = new Choice(relatedTo, getValeur(), getNumber());
-            choices.add(c);
+    public void C(){ //creates a condition
+        if (getTypeDeToken()==TypeDeToken.text) {
+            String sName = getValeur();
+            boolean b = true;
             nextToken();
-            if (!finAtteinte()){
-                if (this.getTypeDeToken()==TypeDeToken.scene) {
-                    S();
+            if (getTypeDeToken()==TypeDeToken.keyWord) {
+                String sBool = getValeur();
+                if (sBool == "false") {
+                    b=false;
                 }
-                if (this.getTypeDeToken()==TypeDeToken.choice) {
-                    C(relatedTo);
+                else if (sBool == "true") {
+                    b=true;
                 }
-                if (this.getTypeDeToken()==TypeDeToken.end) {
-                    E();
+                else{
+                    throw new IllegalArgumentException("condition must be true or false");
                 }
             }
+            else{
+                throw new IllegalArgumentException("Missing keyword after condition name");
+            }
+            conditions.put(sName, b);
         }
         else{
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("condition needs a name");
+        }
+        S();
+    }
+
+    public void SC(){ //creates a scene
+        boolean isFinal=false;
+        int sceneNumber=0;
+        String sceneText="";
+        if (getTypeDeToken()==TypeDeToken.keyWord) {
+            if (getValeur()=="Final") {
+                isFinal = true;
+            }
+            else{
+                throw new IllegalArgumentException("Can't put a keyword that isn't Final after Scene");
+            }
+        }
+        if (getTypeDeToken()==TypeDeToken.number) {
+            sceneNumber = getNumber();
+            nextToken();
+        }
+        else{
+            throw new IllegalArgumentException("Missing number");
+        }
+        if (!(getTypeDeToken()==TypeDeToken.sectionStart)) {
+            throw new IllegalArgumentException("Missing section start");
+        }
+        if (getTypeDeToken()==TypeDeToken.text) {
+            sceneText = getValeur();
+            nextToken();
+        }
+        else{
+            throw new IllegalArgumentException("Missing scene text");
+        }
+        Scene sc = new Scene(sceneNumber, sceneText, isFinal);
+        scenes.add(sc);
+        if (!isFinal) {
+            CH(sc);
         }
     }
 
-    public void E(){
-        Scene s = new Scene(getNumber(), getValeur(), true);
-        scenes.add(s);
-        nextToken();
-        if (!finAtteinte()){
-            if (this.getTypeDeToken()==TypeDeToken.scene) {
-                S();
+    public void CH(Scene sc){ //creates choices for a scene
+        int choiceNumber=0;
+        String choiceText="";
+        while (getTypeDeToken()==TypeDeToken.choice || (getTypeDeToken()==TypeDeToken.keyWord && getValeur()=="if")) {
+            if (getTypeDeToken()==TypeDeToken.choice) {
+                nextToken();
+                if (!(getTypeDeToken()==TypeDeToken.number)) {
+                    throw new IllegalArgumentException("number expected after choice token");
+                }
+                choiceNumber=getNumber();
+                nextToken();
+                if (!(getTypeDeToken()==TypeDeToken.text)) {
+                    throw new IllegalArgumentException("text expected after choice number token");
+                }
+                choiceText=getValeur();
+                choices.add(new Choice(sc.getId(), choiceText, choiceNumber));
+                nextToken();
             }
-            if(this.getTypeDeToken()==TypeDeToken.end) {
-                E();
-            }
-            if (this.getTypeDeToken()==TypeDeToken.choice){
-                throw new IllegalArgumentException();
+            if (getTypeDeToken()==TypeDeToken.keyWord) {
+                nextToken();
+                if (!(getTypeDeToken()==TypeDeToken.conditionStart)) {
+                    throw new IllegalArgumentException("need a ( to start a condition");
+                }
+                searchCondition();
+                if (!(getTypeDeToken()==TypeDeToken.conditionEnd)) {
+                    throw new IllegalArgumentException("need a ) to end the condition");
+                }
             }
         }
+    }
+
+    public void searchCondition(){
+
     }
 
 }
