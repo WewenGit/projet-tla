@@ -45,6 +45,7 @@ public class AnalyseSyntaxique {
         this.game = new Game(scenes,conditions);
         return game;
     }
+    
 
 
 
@@ -69,6 +70,12 @@ public class AnalyseSyntaxique {
             throw new IllegalArgumentException("Missing keyword");
         }
     }
+    
+    
+    
+    
+    
+    
 
     public void C(){ //creates a condition
         if (getTypeDeToken()==TypeDeToken.text) {
@@ -97,11 +104,18 @@ public class AnalyseSyntaxique {
         }
         S();
     }
+    
+    
+    
+    
+    
 
     public void SC(){ //creates a scene
         boolean isFinal=false;
         int sceneNumber=0;
         String sceneText="";
+        ArrayList<Choice> choices = new ArrayList<Choice>();
+        HashMap<String, Boolean> conditionsToChange = new HashMap<String, Boolean>();
         if (getTypeDeToken()==TypeDeToken.keyWord) {
             if (getValeur().equals("Final") || getValeur().equals("final")) {
                 isFinal = true;
@@ -111,81 +125,87 @@ public class AnalyseSyntaxique {
                 throw new IllegalArgumentException("Can't put a keyword that isn't Final after Scene");
             }
         }
-        if (getTypeDeToken()==TypeDeToken.number) {
+        if (getTypeDeToken().equals(TypeDeToken.number)) {
             sceneNumber = getNumber();
             nextToken();
         }
         else{
             throw new IllegalArgumentException("Missing scene number");
         }
-        if (getTypeDeToken()!=TypeDeToken.sectionStart) {
+        if (!getTypeDeToken().equals(TypeDeToken.sectionStart)) {
             throw new IllegalArgumentException("Missing section start");
         }
-        if (getTypeDeToken()==TypeDeToken.text) {
-            sceneText = getValeur();
-            nextToken();
+        while(getTypeDeToken().equals(TypeDeToken.text) || (getTypeDeToken().equals(TypeDeToken.keyWord) && getValeur().equals("Condition")))
+        {
+			if(getTypeDeToken().equals(TypeDeToken.text))
+			{
+				sceneText += getValeur()+"\n";
+				nextToken();
+			}
+			else CTC(conditionsToChange);
         }
-        else{
-            throw new IllegalArgumentException("Missing scene text");
-        }
-        ArrayList<Choice> choices = new ArrayList<Choice>();
         if (!isFinal) {
             choices = CH();
         }
-        Scene sc = new Scene(sceneNumber, sceneText, choices, isFinal);
+        Scene sc = new Scene(sceneNumber, sceneText, choices, conditionsToChange, isFinal);
         scenes.add(sc);
     }
+    
+    
+    
+    
+    
 
     public ArrayList<Choice> CH(){ //creates choices for a scene
         int choiceNumber=0;
         String choiceText="";
         ArrayList<String> conditions = new ArrayList<String>();
         ArrayList<Choice> choices = new ArrayList<Choice>();
-        while (getTypeDeToken()==TypeDeToken.choice || (getTypeDeToken()==TypeDeToken.keyWord && getValeur()=="if")) {
-            if (getTypeDeToken()==TypeDeToken.choice) {
+        while (getTypeDeToken()==TypeDeToken.choice || (getTypeDeToken().equals(TypeDeToken.keyWord) && getValeur().equals("if"))) {
+            if (getTypeDeToken().equals(TypeDeToken.choice)) {
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.number) {
+                if (!getTypeDeToken().equals(TypeDeToken.number)) {
                     throw new IllegalArgumentException("number expected after choice token");
                 }
                 choiceNumber=getNumber();
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.text) {
+                if (!getTypeDeToken().equals(TypeDeToken.text)) {
                     throw new IllegalArgumentException("text expected after choice number token");
                 }
                 choiceText=getValeur();
                 nextToken();
                 choices.add(new Choice(choiceText, choiceNumber));
             }
-            if (getTypeDeToken()==TypeDeToken.keyWord) {
+            if (getTypeDeToken().equals(TypeDeToken.keyWord)) {
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.conditionStart) {
+                if (!getTypeDeToken().equals(TypeDeToken.conditionStart)) {
                     throw new IllegalArgumentException("need a ( to start a condition");
                 }
                 nextToken();
                 conditions=CO();
-                if (getTypeDeToken()!=TypeDeToken.conditionEnd) {
+                if (!getTypeDeToken().equals(TypeDeToken.conditionEnd)) {
                     throw new IllegalArgumentException("need a ) to end the condition");
                 }
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.sectionStart) {
+                if (!getTypeDeToken().equals(TypeDeToken.sectionStart)) {
                     throw new IllegalArgumentException("need a { to start the choice section");
                 }
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.choice) {
+                if (!getTypeDeToken().equals(TypeDeToken.choice)) {
                     throw new IllegalArgumentException("choice token expected before choice number");
                 }
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.number) {
+                if (!getTypeDeToken().equals(TypeDeToken.number)) {
                     throw new IllegalArgumentException("number expected after choice token");
                 }
                 choiceNumber=getNumber();
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.text) {
+                if (!getTypeDeToken().equals(TypeDeToken.text)) {
                     throw new IllegalArgumentException("text expected after choice number token");
                 }
                 choiceText=getValeur();
                 nextToken();
-                if (getTypeDeToken()!=TypeDeToken.sectionEnd) {
+                if (!getTypeDeToken().equals(TypeDeToken.sectionEnd)) {
                     throw new IllegalArgumentException("need a } to end the choice section");
                 }
                 nextToken();
@@ -195,13 +215,78 @@ public class AnalyseSyntaxique {
         return choices;
     }
 
+    
+    
+    
+    
+    
+    
     public ArrayList<String> CO(){
     	ArrayList<String> conditions = new ArrayList<String>();
-        while(getTypeDeToken()==TypeDeToken.keyWord) {
+        while(getTypeDeToken().equals(TypeDeToken.keyWord)) {
         	conditions.add(tokens.get(pos).getValeur());
         	nextToken();
         }
         return conditions;
     }
-
+    
+    
+    
+    
+    //update conditions to change in a scene
+    public void CTC(HashMap<String, Boolean> conditionsToChange)
+    {
+    	nextToken();
+    	if(!getTypeDeToken().equals(TypeDeToken.text))
+    		throw new IllegalArgumentException("Text was expected after keyWord 'Condition'.");
+    	String conditionName = getValeur();
+    	if(!conditions.containsKey(conditionName))
+    		conditions.put(conditionName, false);
+    	nextToken();
+    	if(!(getTypeDeToken().equals(TypeDeToken.keyWord) && Arrays.asList("false", "true").contains(getValeur())))
+    		throw new IllegalArgumentException("Condition value must be true or false");
+    	boolean conditionValue = getValeur().equals("true");
+    	conditionsToChange.put(conditionName, conditionValue);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
