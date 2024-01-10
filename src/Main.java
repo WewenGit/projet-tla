@@ -111,7 +111,7 @@ public class Main extends JFrame {
 		AnalyseSyntaxique ansyn = new AnalyseSyntaxique();
 		Game game = ansyn.analyse(lt);
 		System.out.println(game);
-		/*boolean inGame=true;
+		boolean inGame=true;
 		List<JButton> buttonList = new ArrayList<>();
 		boolean endBool=true;
 
@@ -128,25 +128,22 @@ public class Main extends JFrame {
         gdcSecondColumn.fill = GridBagConstraints.HORIZONTAL;
 
 		//FIRST CHOICES
-		for (Choice choice : game.getChoices()) {
-			if (choice.getRelation()==s.getId()) {
-
-				JButton button = new JButton(choice.getText());
-				button.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						nextScene=choice.getNextScene();
-						changeOccured=true;
-						for (JButton jButton : buttonList) {
-							buttonsPanel.remove(jButton);
-						}
+		for (Choice choice : s.getChoices()) {
+			JButton button = new JButton(choice.getText());
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					nextScene=choice.getNextScene();
+					changeOccured=true;
+					for (JButton jButton : buttonList) {
+						buttonsPanel.remove(jButton);
 					}
-       			});
+				}
+       		});
 
-        		buttonsPanel.add(button,gdcSecondColumn);
-				gdcSecondColumn.gridy++;
-				buttonList.add(button);
-			}
+        	buttonsPanel.add(button,gdcSecondColumn);
+			gdcSecondColumn.gridy++;
+			buttonList.add(button);
 		}
 		gdcSecondColumn.gridy=0;
 
@@ -165,8 +162,7 @@ public class Main extends JFrame {
 						break;
 					}
 				}
-				for (Choice choice : game.getChoices()) {
-					if (choice.getRelation()==s.getId()) {
+				for (Choice choice : s.getChoices()) {
 						JButton button = new JButton(choice.getText());
 				
 						button.addActionListener(new ActionListener() {
@@ -182,7 +178,6 @@ public class Main extends JFrame {
 						buttonsPanel.add(button,gdcSecondColumn);
 						gdcSecondColumn.gridy++;
 						buttonList.add(button);
-					}
 				}
 				gdcSecondColumn.gridy=0;
 				changeOccured=false;
@@ -202,7 +197,7 @@ public class Main extends JFrame {
 				redraw(window);
 				endBool=false;
 			}
-		}*/
+		}
 	}
 
 	private static void redraw(JFrame window) {
