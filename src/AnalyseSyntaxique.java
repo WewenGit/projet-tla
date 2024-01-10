@@ -190,7 +190,21 @@ public class AnalyseSyntaxique {
     }
 
     public Map<String,Boolean> searchCondition(){
-        
+        Map<String,Boolean> ret = new HashMap<>();
+        boolean b = true;
+        if (!(getTypeDeToken()==TypeDeToken.keyWord)) {
+            throw new IllegalArgumentException("need a keyword to start a condition");
+        }
+        if (getValeur()=="not") {
+            b=false;
+            nextToken();
+        }
+        if (getValeur() != "or" && getValeur() != "and") {
+            
+        }
+
+
+        return ret;
     }
 
 }
