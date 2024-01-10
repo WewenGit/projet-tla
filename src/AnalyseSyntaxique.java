@@ -141,6 +141,7 @@ public class AnalyseSyntaxique {
         {
 			if(getTypeDeToken().equals(TypeDeToken.text))
 			{
+                sceneText=getValeur();
                 System.out.println(sceneText);
 				nextToken();
 			}
