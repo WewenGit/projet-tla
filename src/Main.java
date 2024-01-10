@@ -111,7 +111,7 @@ public class Main extends JFrame {
 		//GAME PARAMETERS
 		AnalyseSyntaxique ansyn = new AnalyseSyntaxique();
 		Game game = ansyn.analyse(lt);
-		System.out.println(game);
+		//System.out.println(game);
 		boolean inGame=true;
 		List<JButton> buttonList = new ArrayList<>();
 		boolean endBool=true;
@@ -120,6 +120,7 @@ public class Main extends JFrame {
 		Scene s = game.getScenes().get(0);
 		String sceneText=s.getText();
 		getTextArea().setText(sceneText);
+		s.movePersonnages();
 		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
 			String key = entry.getKey();
 			if (game.getConditions().containsKey(key)) {
@@ -173,6 +174,7 @@ public class Main extends JFrame {
 						s=scene;
 						sceneText=s.getText();
 						getTextArea().setText(sceneText);
+						s.movePersonnages();
 						for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
 							String key = entry.getKey();
 							if (game.getConditions().containsKey(key)) {

@@ -55,4 +55,9 @@ public class Choice{
         public int getNextScene() {
             return nextScene;
         }
+        
+        @Override
+        public String toString() {
+        	return "Destination: "+ nextScene + " Text: " + text;
+        }
     }

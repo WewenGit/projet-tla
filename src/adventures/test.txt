@@ -1,6 +1,13 @@
 Condition   "estVivant"   false
 Condition   "estHumain"   true
 
+Personnage "Louis-Albert" 0
+{
+    "Je suis tres beau!"
+    -4 "Devenir beau comme Louis."
+    if(estVivant) {-5 "Devenir dieu!"}
+}
+
 Scene 0
 {
     "texte scene 0"
@@ -18,7 +25,8 @@ Scene 1
 
 Scene 2
 {
-    "texte scene 2"
+    "texte scene 2, mais ou est passe Louis-Albert?"
+    Personnage "Louis-Albert" go 0
     Condition "estVivant" true
     -3 "choix final"
     -0 "choix retour scene 0 mais vivant"
@@ -27,4 +35,16 @@ Scene 2
 Scene Final 3
 {
     "texte scene finale"
+}
+
+Scene 4
+{
+    "Vous etes maintenant tres beau! Et Louis albert est partie en 2!"
+    Personnage "Louis-Albert" go 2
+    -0 "Retour"
+}
+
+Scene Final 5
+{
+    "Vous etes maintenant Dieux! Bravo!"
 }
