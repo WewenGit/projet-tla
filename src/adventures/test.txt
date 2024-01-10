@@ -1,50 +1,74 @@
-Condition   "estVivant"   false
-Condition   "estHumain"   true
+Condition "aDesChurros" false
+Condition "pingPong" false
+Condition "parcVisite" false
 
-Personnage "Louis-Albert" 0
+Personnage "Bob" 3
 {
-    "Je suis tres beau!"
-    -4 "Devenir beau comme Louis."
-    if(estVivant) {-5 "Devenir dieu!"}
+    "Salut!"
+    if(not pingPong) {-4 "Faire du ping pong avec Bob"}
+    if(aDesChurros and not parcVisite) {-5 "Proposer a Bob d'aller manger les churros dans le parc"}
 }
 
 Scene 0
 {
-    "texte scene 0"
-    -1 "choix 1"
-    -2 "choix 2 donne vivant"
-    if (estVivant and estHumain) { -3 "choix final" }
+    "Vous vous baladez dans la rue."
+    -0 "Continuer a marcher dans la rue."
+    -1 "Rentrer chez vous."
+    -3 "Aller chez Bob le voisin."
+    if(parcVisite) {-6 "Retourner dans le parc."}
 }
 
 Scene 1
 {
-    "texte scene 1"
-    -3 "choix final"
-    -0 "choix retour 0"
+    "Vous etes chez vous."
+    -0 "Retourner dans la rue."
+    if (not aDesChurros) {-2 "Prendre des churros avec vous."}
+    if (pingPong and parcVisite) {-7 "Vous avez passe une bonne journee avec Bob, vous allez vous coucher."}
 }
 
 Scene 2
 {
-    "texte scene 2, mais ou est passe Louis-Albert?"
-    Personnage "Louis-Albert" go 0
-    Condition "estVivant" true
-    -3 "choix final"
-    -0 "choix retour scene 0 mais vivant"
+    "Vous prenez les churros."
+    Condition "aDesChurros" true
+    -1 "Retour"
 }
 
-Scene Final 3
+Scene 3
 {
-    "texte scene finale"
+    "Vous etes chez Bob."
+    -0 "Retourner dans la rue."
 }
 
 Scene 4
 {
-    "Vous etes maintenant tres beau! Et Louis albert est partie en 2!"
-    Personnage "Louis-Albert" go 2
-    -0 "Retour"
+    "Vous faites un ping pong. Bob vous dit : C'etait cool! Merci."
+    Condition "pingPong" true
+    -1 "Rentrer a la maison."
+    -3 "Retourner chez Bob."
 }
 
-Scene Final 5
+Scene 5
 {
-    "Vous etes maintenant Dieux! Bravo!"
+    "'Hey, c'est gentil!' dit Bob. Vous mangez vos churros, l'ambiance du parc est apaisante.
+
+
+    ...
+
+
+    C'etait un moment agreable. Bob vous dit qu'il compte rester dans le parc apres votre depart."
+    Personnage "Bob" go 6
+    Condition "parcVisite" true
+    -1 "Rentrer a la maison."
+    -3 "Retourner chez Bob."
+}
+
+Scene 6
+{
+    "Il est toujours la."
+    -0 "Retourner dans la rue."
+}
+
+Scene Final 7
+{
+    "Vous vous endormez sur vos deux oreils."
 }

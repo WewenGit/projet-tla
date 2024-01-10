@@ -41,7 +41,7 @@ public class Choice{
         			boolean curCondition = conditions.containsKey(keyWord)? conditions.get(keyWord) : false;
         			if(or) condition |= not?!curCondition: curCondition;
         			else if(and) condition &= not?!curCondition: curCondition;
-        			else condition = curCondition;
+        			else condition = not?!curCondition: curCondition;
         			not = or = and = false;
         		}
         	}
