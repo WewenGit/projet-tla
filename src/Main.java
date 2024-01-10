@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends JFrame {
 	private static JTextArea textArea;
@@ -136,43 +137,19 @@ public class Main extends JFrame {
 		//FIRST CHOICES
 		for (Choice choice : s.getChoices()) {
 
-			if (choice.getConditionTokens()==null) {
+			if (choice.conditionsAreTrue(game.getConditions())) {
 				JButton button = new JButton(choice.getText());
 					button.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							nextScene=choice.getNextScene();
 							changeOccured=true;
-							for (JButton jButton : buttonList) {
-								buttonsPanel.remove(jButton);
-							}
 						}
 					});
 
 					buttonsPanel.add(button,gdcSecondColumn);
 					gdcSecondColumn.gridy++;
 					buttonList.add(button);
-			}
-			else{
-				for (String condition : choice.getConditionTokens()) {
-					if (game.getConditions().get(condition)){
-						JButton button = new JButton(choice.getText());
-						button.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								nextScene=choice.getNextScene();
-								changeOccured=true;
-								for (JButton jButton : buttonList) {
-									buttonsPanel.remove(jButton);
-								}
-							}
-						});
-
-						buttonsPanel.add(button,gdcSecondColumn);
-						gdcSecondColumn.gridy++;
-						buttonList.add(button);
-					}
-				}
 			}
 		}
 		gdcSecondColumn.gridy=0;
@@ -181,9 +158,16 @@ public class Main extends JFrame {
 
 		//game loop
 		while (inGame) {
-			System.out.println(changeOccured);
+			try {
+				TimeUnit.MILLISECONDS.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (changeOccured) {
-				System.out.println("Change occured");
+				for (JButton jButton : buttonList) {
+					buttonsPanel.remove(jButton);
+				}
 				for (Scene scene : game.getScenes()) {
 					if (scene.getId()==nextScene) {
 						s=scene;
@@ -199,16 +183,13 @@ public class Main extends JFrame {
 					}
 				}
 				for (Choice choice : s.getChoices()) {
-					if (choice.getConditionTokens()==null) {
+					if (choice.conditionsAreTrue(game.getConditions())) {
 						JButton button = new JButton(choice.getText());
 						button.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								nextScene=choice.getNextScene();
 								changeOccured=true;
-								for (JButton jButton : buttonList) {
-									buttonsPanel.remove(jButton);
-								}
 							}
 						});
 
@@ -216,27 +197,6 @@ public class Main extends JFrame {
 						gdcSecondColumn.gridy++;
 						buttonList.add(button);
 					}
-				else{
-					for (String condition : choice.getConditionTokens()) {
-						if (game.getConditions().get(condition)){
-							JButton button = new JButton(choice.getText());
-							button.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									nextScene=choice.getNextScene();
-									changeOccured=true;
-									for (JButton jButton : buttonList) {
-										buttonsPanel.remove(jButton);
-									}
-								}
-							});
-
-							buttonsPanel.add(button,gdcSecondColumn);
-							gdcSecondColumn.gridy++;
-							buttonList.add(button);
-						}
-					}
-				}
 				}
 				gdcSecondColumn.gridy=0;
 				changeOccured=false;

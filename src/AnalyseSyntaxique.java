@@ -62,7 +62,8 @@ public class AnalyseSyntaxique {
                 SC();
             }
             else if(getValeur().equals("Personnage")){
-                //TODO
+                nextToken();
+                P();
             }
             
         }
@@ -255,6 +256,15 @@ public class AnalyseSyntaxique {
     	boolean conditionValue = getValeur().equals("true");
     	conditionsToChange.put(conditionName, conditionValue);
         nextToken();
+    }
+    
+    
+    
+    
+    //create a new character ("personnage")
+    public void P()
+    {
+    	
     }
 }
 
