@@ -1,6 +1,7 @@
 Condition "aDesChurros" false
 Condition "pingPong" false
 Condition "parcVisite" false
+Condition "dejaMarcheDansRue" false
 
 Personnage "Bob" 3
 {
@@ -12,7 +13,9 @@ Personnage "Bob" 3
 Scene 0
 {
     "Vous vous baladez dans la rue."
-    -0 "Continuer a marcher dans la rue."
+    Condition "dejaMarcheDansRue" true
+    if (not dejaMarcheDansRue) {-0 "Continuer a marcher dans la rue."}
+    if (dejaMarcheDansRue and not aDesChurros) {-8 "Un paquet de churros est par terre, vous le prenez."}
     -1 "Rentrer chez vous."
     -3 "Aller chez Bob le voisin."
     if(parcVisite) {-6 "Retourner dans le parc."}
@@ -52,10 +55,10 @@ Scene 5
     "'Hey, c'est gentil!' dit Bob. Vous mangez vos churros, l'ambiance du parc est apaisante.
 
 
-    ...
+...
 
 
-    C'etait un moment agreable. Bob vous dit qu'il compte rester dans le parc apres votre depart."
+C'etait un moment agreable. Bob vous dit qu'il compte rester dans le parc apres votre depart."
     Personnage "Bob" go 6
     Condition "parcVisite" true
     -1 "Rentrer a la maison."
@@ -71,4 +74,11 @@ Scene 6
 Scene Final 7
 {
     "Vous vous endormez sur vos deux oreils."
+}
+
+Scene 8
+{
+    "Vous prenez les churros."
+    Condition "aDesChurros" true
+    -0 "Retour"
 }

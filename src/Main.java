@@ -121,12 +121,6 @@ public class Main extends JFrame {
 		String sceneText=s.getText();
 		getTextArea().setText(sceneText);
 		s.movePersonnages();
-		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
-			String key = entry.getKey();
-			if (game.getConditions().containsKey(key)) {
-				game.setCondition(key, entry.getValue());
-			}
-        }
 		
 
 		//GRID CONSTRAINT DEFINITION FOR BUTTON PANEL
@@ -153,6 +147,13 @@ public class Main extends JFrame {
 					buttonList.add(button);
 			}
 		}
+
+		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+			String key = entry.getKey();
+			if (game.getConditions().containsKey(key)) {
+				game.setCondition(key, entry.getValue());
+			}
+        }
 		gdcSecondColumn.gridy=0;
 
 		redraw(window);
@@ -174,13 +175,6 @@ public class Main extends JFrame {
 						s=scene;
 						sceneText=s.getText();
 						getTextArea().setText(sceneText);
-						s.movePersonnages();
-						for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
-							String key = entry.getKey();
-							if (game.getConditions().containsKey(key)) {
-								game.setCondition(key, entry.getValue());
-							}
-						}
 						break;
 					}
 				}
@@ -198,6 +192,13 @@ public class Main extends JFrame {
 						buttonsPanel.add(button,gdcSecondColumn);
 						gdcSecondColumn.gridy++;
 						buttonList.add(button);
+					}
+				}
+				s.movePersonnages();
+				for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+					String key = entry.getKey();
+					if (game.getConditions().containsKey(key)) {
+						game.setCondition(key, entry.getValue());
 					}
 				}
 				gdcSecondColumn.gridy=0;
