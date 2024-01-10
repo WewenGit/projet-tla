@@ -4,6 +4,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -71,7 +72,6 @@ public class Main extends JFrame {
 		getContentPane().add(buttonsPanel,gbcButtons);
 
 		//this is to readjust the size of the elements when the window's size changes
-		//TODO
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -119,6 +119,12 @@ public class Main extends JFrame {
 		Scene s = game.getScenes().get(0);
 		String sceneText=s.getText();
 		getTextArea().setText(sceneText);
+		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+			String key = entry.getKey();
+			if (game.getConditions().containsKey(key)) {
+				game.setCondition(key, entry.getValue());
+			}
+        }
 		
 
 		//GRID CONSTRAINT DEFINITION FOR BUTTON PANEL
@@ -129,21 +135,45 @@ public class Main extends JFrame {
 
 		//FIRST CHOICES
 		for (Choice choice : s.getChoices()) {
-			JButton button = new JButton(choice.getText());
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					nextScene=choice.getNextScene();
-					changeOccured=true;
-					for (JButton jButton : buttonList) {
-						buttonsPanel.remove(jButton);
+
+			if (choice.getConditionTokens()==null) {
+				JButton button = new JButton(choice.getText());
+					button.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							nextScene=choice.getNextScene();
+							changeOccured=true;
+							for (JButton jButton : buttonList) {
+								buttonsPanel.remove(jButton);
+							}
+						}
+					});
+
+					buttonsPanel.add(button,gdcSecondColumn);
+					gdcSecondColumn.gridy++;
+					buttonList.add(button);
+			}
+			else{
+				for (String condition : choice.getConditionTokens()) {
+					if (game.getConditions().get(condition)){
+						JButton button = new JButton(choice.getText());
+						button.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								nextScene=choice.getNextScene();
+								changeOccured=true;
+								for (JButton jButton : buttonList) {
+									buttonsPanel.remove(jButton);
+								}
+							}
+						});
+
+						buttonsPanel.add(button,gdcSecondColumn);
+						gdcSecondColumn.gridy++;
+						buttonList.add(button);
 					}
 				}
-       		});
-
-        	buttonsPanel.add(button,gdcSecondColumn);
-			gdcSecondColumn.gridy++;
-			buttonList.add(button);
+			}
 		}
 		gdcSecondColumn.gridy=0;
 
@@ -159,12 +189,18 @@ public class Main extends JFrame {
 						s=scene;
 						sceneText=s.getText();
 						getTextArea().setText(sceneText);
+						for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+							String key = entry.getKey();
+							if (game.getConditions().containsKey(key)) {
+								game.setCondition(key, entry.getValue());
+							}
+						}
 						break;
 					}
 				}
 				for (Choice choice : s.getChoices()) {
+					if (choice.getConditionTokens()==null) {
 						JButton button = new JButton(choice.getText());
-				
 						button.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
@@ -175,9 +211,32 @@ public class Main extends JFrame {
 								}
 							}
 						});
+
 						buttonsPanel.add(button,gdcSecondColumn);
 						gdcSecondColumn.gridy++;
 						buttonList.add(button);
+					}
+				else{
+					for (String condition : choice.getConditionTokens()) {
+						if (game.getConditions().get(condition)){
+							JButton button = new JButton(choice.getText());
+							button.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									nextScene=choice.getNextScene();
+									changeOccured=true;
+									for (JButton jButton : buttonList) {
+										buttonsPanel.remove(jButton);
+									}
+								}
+							});
+
+							buttonsPanel.add(button,gdcSecondColumn);
+							gdcSecondColumn.gridy++;
+							buttonList.add(button);
+						}
+					}
+				}
 				}
 				gdcSecondColumn.gridy=0;
 				changeOccured=false;
@@ -219,9 +278,9 @@ public class Main extends JFrame {
 		}
 		sc.close();
 		List<Token> lt = al.analyse(txt);
-		for (Token token : lt) {
+		/*for (Token token : lt) {
 			System.out.println(token);
-		}
+		}*/
 		run(lt);
 	}
 }

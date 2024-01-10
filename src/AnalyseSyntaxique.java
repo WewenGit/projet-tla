@@ -97,6 +97,7 @@ public class AnalyseSyntaxique {
             else{
                 throw new IllegalArgumentException("Missing keyword after condition name");
             }
+            nextToken();
             conditions.put(sName, b);
         }
         else{
@@ -135,11 +136,12 @@ public class AnalyseSyntaxique {
         if (!getTypeDeToken().equals(TypeDeToken.sectionStart)) {
             throw new IllegalArgumentException("Missing section start");
         }
+        nextToken();
         while(getTypeDeToken().equals(TypeDeToken.text) || (getTypeDeToken().equals(TypeDeToken.keyWord) && getValeur().equals("Condition")))
         {
 			if(getTypeDeToken().equals(TypeDeToken.text))
 			{
-				sceneText += getValeur()+"\n";
+                System.out.println(sceneText);
 				nextToken();
 			}
 			else CTC(conditionsToChange);
@@ -149,6 +151,11 @@ public class AnalyseSyntaxique {
         }
         Scene sc = new Scene(sceneNumber, sceneText, choices, conditionsToChange, isFinal);
         scenes.add(sc);
+        if (!getTypeDeToken().equals(TypeDeToken.sectionEnd)) {
+            throw new IllegalArgumentException("Missing section end");
+        }
+        nextToken();
+        S();
     }
     
     
@@ -237,7 +244,7 @@ public class AnalyseSyntaxique {
     public void CTC(HashMap<String, Boolean> conditionsToChange)
     {
     	nextToken();
-    	if(!getTypeDeToken().equals(TypeDeToken.text))
+    	if(!(getTypeDeToken().equals(TypeDeToken.text)))
     		throw new IllegalArgumentException("Text was expected after keyWord 'Condition'.");
     	String conditionName = getValeur();
     	if(!conditions.containsKey(conditionName))
@@ -247,6 +254,7 @@ public class AnalyseSyntaxique {
     		throw new IllegalArgumentException("Condition value must be true or false");
     	boolean conditionValue = getValeur().equals("true");
     	conditionsToChange.put(conditionName, conditionValue);
+        nextToken();
     }
 }
 

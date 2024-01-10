@@ -24,6 +24,16 @@ public class Game {
             s+="\n";
             s+="\n";
         }
+        for (Map.Entry<String, Boolean> entry : conditions.entrySet()) {
+            String cle = entry.getKey();
+            Boolean valeur = entry.getValue();
+            s+="Condition : " + cle + ", Valeur : " + valeur;
+            s+="\n";
+        }
         return s;
+    }
+
+    public void setCondition(String condition, Boolean newBool){
+        conditions.put(condition, newBool);
     }
 }

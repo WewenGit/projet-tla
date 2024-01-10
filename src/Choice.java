@@ -6,7 +6,7 @@ public class Choice{
 
         private String text;
         private int nextScene;
-        private ArrayList<String> conditionTokens=new ArrayList<String>();
+        private ArrayList<String> conditionTokens=null;
 
         public Choice(String text, int nextScene) {
             this.text = text;
@@ -50,5 +50,12 @@ public class Choice{
     
         public int getNextScene() {
             return nextScene;
+        }
+
+        public ArrayList<String> getConditionTokens(){
+            if (conditionTokens!=null) {
+                return conditionTokens;
+            }
+            return null;
         }
     }
