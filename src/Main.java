@@ -181,9 +181,8 @@ public class Main extends JFrame {
 
 		//game loop
 		while (inGame) {
-			System.out.println(changeOccured);
+			System.out.println("");
 			if (changeOccured) {
-				System.out.println("Change occured");
 				for (Scene scene : game.getScenes()) {
 					if (scene.getId()==nextScene) {
 						s=scene;
