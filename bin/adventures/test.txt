@@ -1,0 +1,30 @@
+Condition   "estVivant"   false
+Condition   "estHumain"   true
+
+Scene 0
+{
+    "texte scene 0"
+    -1 "choix 1"
+    -2 "choix 2 donne vivant"
+    if (estVivant and estHumain) { -3 "choix final" }
+}
+
+Scene 1
+{
+    "texte scene 1"
+    -3 "choix final"
+    -0 "choix retour 0"
+}
+
+Scene 2
+{
+    "texte scene 2"
+    Condition "estVivant" true
+    -3 "choix final"
+    -0 "choix retour scene 0 mais vivant"
+}
+
+Scene Final 3
+{
+    "texte scene finale"
+}

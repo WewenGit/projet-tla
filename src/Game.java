@@ -1,13 +1,16 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Game {
     private List<Scene> scenes;
     private Map<String,Boolean> conditions;
+    private ArrayList<Personnage> personnages;
 
-    public Game(List<Scene> scenes, Map<String,Boolean> conditions){
+    public Game(List<Scene> scenes, Map<String,Boolean> conditions, ArrayList<Personnage> personnages){
         this.scenes = scenes;
         this.conditions=conditions;
+        this.personnages = personnages;
     }
 
     public List<Scene> getScenes(){
@@ -16,8 +19,11 @@ public class Game {
     public Map<String,Boolean> getConditions(){
         return this.conditions;
     }
+    public ArrayList<Personnage> getPersonnages() {
+		return personnages;
+	}
 
-    public String toString(){
+	public String toString(){
         String s="";
         for (Scene scene : scenes) {
             s+="Id : "+scene.getId()+", text : "+scene.getText()+", is the end : "+scene.isEnd();

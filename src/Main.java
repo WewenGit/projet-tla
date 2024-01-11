@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends JFrame {
 	private static JTextArea textArea;
@@ -110,7 +111,7 @@ public class Main extends JFrame {
 		//GAME PARAMETERS
 		AnalyseSyntaxique ansyn = new AnalyseSyntaxique();
 		Game game = ansyn.analyse(lt);
-		System.out.println(game);
+		//System.out.println(game);
 		boolean inGame=true;
 		List<JButton> buttonList = new ArrayList<>();
 		boolean endBool=true;
@@ -119,12 +120,7 @@ public class Main extends JFrame {
 		Scene s = game.getScenes().get(0);
 		String sceneText=s.getText();
 		getTextArea().setText(sceneText);
-		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
-			String key = entry.getKey();
-			if (game.getConditions().containsKey(key)) {
-				game.setCondition(key, entry.getValue());
-			}
-        }
+		s.movePersonnages();
 		
 
 		//GRID CONSTRAINT DEFINITION FOR BUTTON PANEL
@@ -136,16 +132,13 @@ public class Main extends JFrame {
 		//FIRST CHOICES
 		for (Choice choice : s.getChoices()) {
 
-			if (choice.getConditionTokens()==null) {
+			if (choice.conditionsAreTrue(game.getConditions())) {
 				JButton button = new JButton(choice.getText());
 					button.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							nextScene=choice.getNextScene();
 							changeOccured=true;
-							for (JButton jButton : buttonList) {
-								buttonsPanel.remove(jButton);
-							}
 						}
 					});
 
@@ -153,61 +146,46 @@ public class Main extends JFrame {
 					gdcSecondColumn.gridy++;
 					buttonList.add(button);
 			}
-			else{
-				for (String condition : choice.getConditionTokens()) {
-					if (game.getConditions().get(condition)){
-						JButton button = new JButton(choice.getText());
-						button.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								nextScene=choice.getNextScene();
-								changeOccured=true;
-								for (JButton jButton : buttonList) {
-									buttonsPanel.remove(jButton);
-								}
-							}
-						});
-
-						buttonsPanel.add(button,gdcSecondColumn);
-						gdcSecondColumn.gridy++;
-						buttonList.add(button);
-					}
-				}
-			}
 		}
+
+		for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+			String key = entry.getKey();
+			if (game.getConditions().containsKey(key)) {
+				game.setCondition(key, entry.getValue());
+			}
+        }
 		gdcSecondColumn.gridy=0;
 
 		redraw(window);
 
 		//game loop
 		while (inGame) {
-			System.out.println("");
+			try {
+				TimeUnit.MILLISECONDS.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (changeOccured) {
+				for (JButton jButton : buttonList) {
+					buttonsPanel.remove(jButton);
+				}
 				for (Scene scene : game.getScenes()) {
 					if (scene.getId()==nextScene) {
 						s=scene;
 						sceneText=s.getText();
 						getTextArea().setText(sceneText);
-						for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
-							String key = entry.getKey();
-							if (game.getConditions().containsKey(key)) {
-								game.setCondition(key, entry.getValue());
-							}
-						}
 						break;
 					}
 				}
 				for (Choice choice : s.getChoices()) {
-					if (choice.getConditionTokens()==null) {
+					if (choice.conditionsAreTrue(game.getConditions())) {
 						JButton button = new JButton(choice.getText());
 						button.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								nextScene=choice.getNextScene();
 								changeOccured=true;
-								for (JButton jButton : buttonList) {
-									buttonsPanel.remove(jButton);
-								}
 							}
 						});
 
@@ -215,27 +193,13 @@ public class Main extends JFrame {
 						gdcSecondColumn.gridy++;
 						buttonList.add(button);
 					}
-				else{
-					for (String condition : choice.getConditionTokens()) {
-						if (game.getConditions().get(condition)){
-							JButton button = new JButton(choice.getText());
-							button.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									nextScene=choice.getNextScene();
-									changeOccured=true;
-									for (JButton jButton : buttonList) {
-										buttonsPanel.remove(jButton);
-									}
-								}
-							});
-
-							buttonsPanel.add(button,gdcSecondColumn);
-							gdcSecondColumn.gridy++;
-							buttonList.add(button);
-						}
-					}
 				}
+				s.movePersonnages();
+				for (Map.Entry<String, Boolean> entry : s.getConditionsToChange().entrySet()) {
+					String key = entry.getKey();
+					if (game.getConditions().containsKey(key)) {
+						game.setCondition(key, entry.getValue());
+					}
 				}
 				gdcSecondColumn.gridy=0;
 				changeOccured=false;

@@ -23,8 +23,11 @@ public class Choice{
         {
         	boolean condition = true;
         	boolean not = false, or = false, and = false;
+        	if(conditionTokens == null)
+        		return true;
         	for(String keyWord : conditionTokens)
         	{
+        		
         		if(Arrays.asList("and","or","not").contains(keyWord)) {
             		if(keyWord.equals("not"))
             			not = true;
@@ -38,6 +41,7 @@ public class Choice{
         			boolean curCondition = conditions.containsKey(keyWord)? conditions.get(keyWord) : false;
         			if(or) condition |= not?!curCondition: curCondition;
         			else if(and) condition &= not?!curCondition: curCondition;
+        			else condition = not?!curCondition: curCondition;
         			not = or = and = false;
         		}
         	}
@@ -51,11 +55,9 @@ public class Choice{
         public int getNextScene() {
             return nextScene;
         }
-
-        public ArrayList<String> getConditionTokens(){
-            if (conditionTokens!=null) {
-                return conditionTokens;
-            }
-            return null;
+        
+        @Override
+        public String toString() {
+        	return "Destination: "+ nextScene + " Text: " + text;
         }
     }

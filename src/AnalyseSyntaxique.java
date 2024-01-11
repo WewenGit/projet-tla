@@ -10,6 +10,7 @@ public class AnalyseSyntaxique {
     private int pos;
     private List<Scene> scenes;
     private Map<String, Boolean> conditions;
+    private ArrayList<Personnage> personnages;
     private Game game;
 
 
@@ -41,8 +42,9 @@ public class AnalyseSyntaxique {
         this.tokens=tokens;
         this.scenes = new ArrayList<>();
         this.conditions = new HashMap<>();
+        this.personnages = new ArrayList<Personnage>();
         S();
-        this.game = new Game(scenes,conditions);
+        this.game = new Game(scenes,conditions, personnages);
         return game;
     }
     
@@ -62,7 +64,8 @@ public class AnalyseSyntaxique {
                 SC();
             }
             else if(getValeur().equals("Personnage")){
-                //TODO
+                nextToken();
+                P();
             }
             
         }
@@ -117,6 +120,7 @@ public class AnalyseSyntaxique {
         String sceneText="";
         ArrayList<Choice> choices = new ArrayList<Choice>();
         HashMap<String, Boolean> conditionsToChange = new HashMap<String, Boolean>();
+        HashMap<String, Integer> personnagesToMove = new HashMap<String, Integer>();
         if (getTypeDeToken()==TypeDeToken.keyWord) {
             if (getValeur().equals("Final") || getValeur().equals("final")) {
                 isFinal = true;
@@ -137,19 +141,22 @@ public class AnalyseSyntaxique {
             throw new IllegalArgumentException("Missing section start");
         }
         nextToken();
-        while(getTypeDeToken().equals(TypeDeToken.text) || (getTypeDeToken().equals(TypeDeToken.keyWord) && getValeur().equals("Condition")))
+        while(getTypeDeToken().equals(TypeDeToken.text) ||
+        	(getTypeDeToken().equals(TypeDeToken.keyWord) && (getValeur().equals("Condition") || getValeur().equals("Personnage"))))
         {
 			if(getTypeDeToken().equals(TypeDeToken.text))
 			{
                 sceneText+=getValeur()+"\n";
 				nextToken();
 			}
-			else CTC(conditionsToChange);
+			else if(getValeur().equals("Condition"))
+				CTC(conditionsToChange);
+			else PTM(personnagesToMove);
         }
         if (!isFinal) {
             choices = CH();
         }
-        Scene sc = new Scene(sceneNumber, sceneText, choices, conditionsToChange, isFinal);
+        Scene sc = new Scene(sceneNumber, sceneText, choices, conditionsToChange, personnages, personnagesToMove, isFinal);
         scenes.add(sc);
         if (!getTypeDeToken().equals(TypeDeToken.sectionEnd)) {
             throw new IllegalArgumentException("Missing section end");
@@ -163,7 +170,9 @@ public class AnalyseSyntaxique {
     
     
 
-    public ArrayList<Choice> CH(){ //creates choices for a scene
+    
+
+	public ArrayList<Choice> CH(){ //creates choices for a scene
         int choiceNumber=0;
         String choiceText="";
         ArrayList<String> conditions = new ArrayList<String>();
@@ -256,6 +265,59 @@ public class AnalyseSyntaxique {
     	conditionsToChange.put(conditionName, conditionValue);
         nextToken();
     }
+    
+    
+    
+    
+    //create a new character ("personnage")
+    public void P()
+    {
+    	if(!getTypeDeToken().equals(TypeDeToken.text))
+    		throw new IllegalArgumentException("Text expected for the name of the character.");
+    	String name = getValeur();
+    	nextToken();
+    	
+    	if(!getTypeDeToken().equals(TypeDeToken.number))
+    		throw new IllegalArgumentException("Number expected for the start scene of the character: '"+name+"'.");
+    	int sceneId = getNumber();
+    	nextToken();
+    	
+    	if(!getTypeDeToken().equals(TypeDeToken.sectionStart))
+    		throw new IllegalArgumentException("{ expected.");
+    	nextToken();
+    	
+    	if(!getTypeDeToken().equals(TypeDeToken.text))
+    		throw new IllegalArgumentException("Text expected for character dialogue.");
+    	String text = getValeur();
+    	nextToken();
+    	
+    	personnages.add(new Personnage(name, sceneId, text, CH()));
+    	
+    	if(!getTypeDeToken().equals(TypeDeToken.sectionEnd))
+    		throw new IllegalArgumentException("} expected.");
+    	nextToken();
+    	S();
+    }
+
+    
+    
+    
+    //update personnages to move
+    private void PTM(HashMap<String, Integer> personnagesToMove) {
+    	nextToken();
+    	if(!(getTypeDeToken().equals(TypeDeToken.text)))
+    		throw new IllegalArgumentException("Text was expected after keyWord 'Personnage'.");
+    	String persoName = getValeur();
+    	nextToken();
+    	if(!(getTypeDeToken().equals(TypeDeToken.keyWord) && getValeur().equals("go")))
+    		throw new IllegalArgumentException("keyWord 'go' was expected after personange name.");
+    	nextToken();
+    	if(!getTypeDeToken().equals(TypeDeToken.number))
+    		throw new IllegalArgumentException("Number expected as personnage new scene.");
+    	Integer newSceneId = getNumber();
+    	personnagesToMove.put(persoName, newSceneId);
+        nextToken();
+	}
 }
 
 
